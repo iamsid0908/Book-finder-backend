@@ -1,0 +1,16 @@
+.login {
+  border: 1px solid red;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loginform {
+  border: 1px solid black;
+  height: 500px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
