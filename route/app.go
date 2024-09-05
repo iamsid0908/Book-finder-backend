@@ -14,6 +14,7 @@ type AppModel struct {
 	Customer handler.CustomerHandler
 	Billing  handler.BillingHandler
 	Payment  handler.PaymentHandler
+	Email    handler.EmailHandler
 }
 
 func App() AppModel {
@@ -25,6 +26,7 @@ func App() AppModel {
 	customerDomain := &domain.CustomerDomainCtx{}
 	billingDomain := &domain.BillingDomainCtx{}
 	paymentDomain := &domain.PaymentDomainCtx{}
+	emailDomain := &domain.EmailDomainCtx{}
 
 	//service
 	healthService := service.HealthService{
@@ -49,6 +51,9 @@ func App() AppModel {
 	paymentService := service.PaymentService{
 		PaymentDomain: paymentDomain,
 	}
+	emailService := service.EmailService{
+		EmailDomain: emailDomain,
+	}
 
 	//handler
 	healthHandler := handler.HealthHandler{
@@ -72,6 +77,9 @@ func App() AppModel {
 	paymentHandler := handler.PaymentHandler{
 		PaymentService: paymentService,
 	}
+	emailHandler := handler.EmailHandler{
+		EmailService: emailService,
+	}
 
 	return AppModel{
 		Health:   healthHandler,
@@ -81,5 +89,6 @@ func App() AppModel {
 		Customer: customerHandler,
 		Billing:  billingHandler,
 		Payment:  paymentHandler,
+		Email:    emailHandler,
 	}
 }

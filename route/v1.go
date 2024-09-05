@@ -35,4 +35,8 @@ func v1Routes(g *echo.Group, h AppModel) {
 	user := g.Group("/user")
 	user.PUT("/update", h.User.Update, middleware.JWTVerify(), middleware.VerifyRoles("Administrator"))
 	user.GET("/list", h.User.ListUser, middleware.JWTVerify(), middleware.VerifyRoles("Administrator"))
+
+	email := g.Group("/email")
+	email.POST("/send", h.Email.SendOneEmail)
+
 }
