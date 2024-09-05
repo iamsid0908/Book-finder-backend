@@ -8,13 +8,15 @@ import (
 )
 
 type Configuration struct {
-	Port       string `env:"PORT"`
-	DbHost     string `env:"DB_HOST"`
-	DbPort     string `env:"DB_PORT"`
-	DbName     string `env:"DB_NAME"`
-	DbUser     string `env:"DB_USER"`
-	DbPassword string `env:"DB_PASSWORD"`
-	JWTSecret  string `env:"JWT_SECRET"`
+	Port                 string `env:"PORT"`
+	DbHost               string `env:"DB_HOST"`
+	DbPort               string `env:"DB_PORT"`
+	DbName               string `env:"DB_NAME"`
+	DbUser               string `env:"DB_USER"`
+	DbPassword           string `env:"DB_PASSWORD"`
+	JWTSecret            string `env:"JWT_SECRET"`
+	PrimaryEmail         string `env:"PRIMARY_EMAIL"`
+	PrimaryEmailPassword string `env:"PRIMARY_EMAIL_PASSWORD"`
 }
 
 func GetConfig() Configuration {
