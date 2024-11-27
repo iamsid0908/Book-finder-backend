@@ -15,6 +15,7 @@ type UserDomain interface {
 	GetLoginUser(params *models.User) (*models.User, error)
 	GetAll() ([]models.User, error)
 	Update(param models.User) error
+	GetUserName(param models.User) (models.User, error)
 }
 type UserDomainCtx struct{}
 
@@ -110,4 +111,14 @@ func (c *UserDomainCtx) Update(param models.User) error {
 		return err
 	}
 	return nil
+}
+
+func (c *UserDomainCtx) GetUserName(param models.User) (models.User, error) {
+	db := config.DbManager()
+	result := models.User{}
+	err := db.Find(&result).Error
+	if err != nil {
+		return models.User{}, err
+	}
+	return result, nil
 }

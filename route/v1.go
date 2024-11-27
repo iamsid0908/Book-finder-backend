@@ -13,30 +13,21 @@ func v1Routes(g *echo.Group, h AppModel) {
 	auth.POST("/login", h.Auth.LoginUser)
 	auth.GET("/test", h.Auth.Test, middleware.JWTVerify())
 
-	role := g.Group("/role")
-	role.POST("/insert", h.Role.Insert)
-	role.GET("/list", h.Role.FindAll)
+	user := g.Group("/user", middleware.JWTVerify())
+	user.GET("/get-user-name", h.User.GetUserName)
 
-	customer := g.Group("/customer")
-	customer.POST("/insert", h.Customer.Insert, middleware.JWTVerify())
-	customer.GET("/get", h.Customer.GetAll, middleware.JWTVerify(), middleware.VerifyRoles("Sales"))
-	customer.PUT("/update", h.Customer.UpdateCustomer, middleware.JWTVerify(), middleware.VerifyRoles("Sales"))
+	book := g.Group("/books", middleware.JWTVerify())
+	book.POST("/insert", h.Book.Insert)
+	book.GET("/getall", h.Book.GellAllBook)
 
-	billing := g.Group("/billing")
-	billing.POST("/insert", h.Billing.Insert, middleware.JWTVerify())
-	billing.PUT("/update", h.Billing.Update, middleware.JWTVerify(), middleware.VerifyRoles("Sales", "Accountant"))
-	billing.GET("/get", h.Billing.List, middleware.JWTVerify(), middleware.VerifyRoles("Sales", "Accountant"))
+	booksummary := g.Group("/book-summary", middleware.JWTVerify())
+	booksummary.POST("/insert", h.BookSummary.Insert)
+	booksummary.GET("/book-detail/:book_id", h.BookSummary.GetBookDetails)
 
-	payment := g.Group("/payment")
-	payment.POST("/insert", h.Payment.Insert, middleware.JWTVerify())
-	payment.GET("/get", h.Payment.GetAll, middleware.JWTVerify(), middleware.VerifyRoles("HR", "Accountant"))
-	payment.POST("/update", h.Payment.Update, middleware.JWTVerify(), middleware.VerifyRoles("HR", "Accountant"))
-
-	user := g.Group("/user")
-	user.PUT("/update", h.User.Update, middleware.JWTVerify(), middleware.VerifyRoles("Administrator"))
-	user.GET("/list", h.User.ListUser, middleware.JWTVerify(), middleware.VerifyRoles("Administrator"))
-
-	email := g.Group("/email")
-	email.POST("/send", h.Email.SendOneEmail)
+	cart := g.Group("/cart", middleware.JWTVerify())
+	cart.POST("/insert", h.Cart.Insert)
+	cart.GET("/get-cart", h.Cart.GetCartByUserId)
+	cart.GET("/cart-size", h.Cart.GetSizeofCart)
+	cart.DELETE("/cart-remove", h.Cart.RemoveFromCart)
 
 }

@@ -7,14 +7,17 @@ import (
 )
 
 type AppModel struct {
-	Health   handler.HealthHandler
-	User     handler.UserHandler
-	Auth     handler.AuthHandler
-	Role     handler.RoleHandler
-	Customer handler.CustomerHandler
-	Billing  handler.BillingHandler
-	Payment  handler.PaymentHandler
-	Email    handler.EmailHandler
+	Health      handler.HealthHandler
+	User        handler.UserHandler
+	Auth        handler.AuthHandler
+	Role        handler.RoleHandler
+	Customer    handler.CustomerHandler
+	Billing     handler.BillingHandler
+	Payment     handler.PaymentHandler
+	Email       handler.EmailHandler
+	Book        handler.BookHandler
+	BookSummary handler.BookSummaryHandler
+	Cart        handler.CartHandler
 }
 
 func App() AppModel {
@@ -27,6 +30,9 @@ func App() AppModel {
 	billingDomain := &domain.BillingDomainCtx{}
 	paymentDomain := &domain.PaymentDomainCtx{}
 	emailDomain := &domain.EmailDomainCtx{}
+	bookDomain := &domain.BookDomainCtx{}
+	bookSummaryDomain := &domain.BookSummaryDomainCtx{}
+	cartDomain := &domain.CartDomainCtx{}
 
 	//service
 	healthService := service.HealthService{
@@ -54,6 +60,15 @@ func App() AppModel {
 	emailService := service.EmailService{
 		EmailDomain: emailDomain,
 	}
+	bookService := service.BookService{
+		BookDomain: bookDomain,
+	}
+	bookSummaryService := service.BookSummaryService{
+		BookSummaryDomain: bookSummaryDomain,
+	}
+	cartService := service.CartService{
+		CartDomain: cartDomain,
+	}
 
 	//handler
 	healthHandler := handler.HealthHandler{
@@ -80,15 +95,27 @@ func App() AppModel {
 	emailHandler := handler.EmailHandler{
 		EmailService: emailService,
 	}
+	bookHandler := handler.BookHandler{
+		BookService: bookService,
+	}
+	bookSummaryHandler := handler.BookSummaryHandler{
+		BookSummaryService: bookSummaryService,
+	}
+	cartHandler := handler.CartHandler{
+		CartService: cartService,
+	}
 
 	return AppModel{
-		Health:   healthHandler,
-		User:     userHandler,
-		Auth:     authHandler,
-		Role:     roleHandler,
-		Customer: customerHandler,
-		Billing:  billingHandler,
-		Payment:  paymentHandler,
-		Email:    emailHandler,
+		Health:      healthHandler,
+		User:        userHandler,
+		Auth:        authHandler,
+		Role:        roleHandler,
+		Customer:    customerHandler,
+		Billing:     billingHandler,
+		Payment:     paymentHandler,
+		Email:       emailHandler,
+		Book:        bookHandler,
+		BookSummary: bookSummaryHandler,
+		Cart:        cartHandler,
 	}
 }

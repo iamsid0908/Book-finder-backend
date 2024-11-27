@@ -40,3 +40,16 @@ func (userHandler *UserHandler) Update(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, resp)
 }
+
+func (userHandler *UserHandler) GetUserName(c echo.Context) error {
+	userId := c.Get("id").(int64)
+	data, err := userHandler.UserService.GetUserName(userId)
+	if err != nil {
+		return err
+	}
+	resp := models.BasicResp{
+		Message: utils.Success,
+		Data:    data,
+	}
+	return c.JSON(http.StatusOK, resp)
+}
