@@ -3,6 +3,10 @@ package domain
 import (
 	"core/config"
 	"core/models"
+	"errors"
+	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type CartDomain interface {
@@ -15,7 +19,16 @@ type CartDomainCtx struct{}
 
 func (c *CartDomainCtx) Insert(param models.Cart) error {
 	db := config.DbManager()
-	err := db.Create(&param).Error
+	var existingCart models.Cart
+	err := db.Where("user_id = ? AND book_id = ?", param.UserID, param.BookID).First(&existingCart).Error
+	if err == nil {
+		return fmt.Errorf("the book_id %d is already in the cart for user_id %d", param.BookID, param.UserID)
+	}
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+
+	err = db.Create(&param).Error
 	if err != nil {
 		return err
 	}
