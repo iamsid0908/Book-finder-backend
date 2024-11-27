@@ -5,7 +5,7 @@ import "time"
 type Cart struct {
 	ID        int64     `gorm:"column:id;unique"`
 	UserID    int64     `gorm:"user_id"`
-	BookID    int64     `gorm:"book_id;unique"`
+	BookID    int64     `gorm:"book_id"`
 	CreatedAt time.Time `gorm:"created_at"`
 	UpdatedAt time.Time `gotm:"updated_at"`
 }
