@@ -15,8 +15,7 @@ var err error
 
 func DbInit() {
 	config := GetConfig()
-	connectString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		config.DbHost, config.DbUser, config.DbPassword, config.DbName, config.DbPort)
+	connectString := fmt.Sprintf(config.Dburl)
 
 	// Open the connection to the database
 	db, err = gorm.Open(postgres.Open(connectString), &gorm.Config{
