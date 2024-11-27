@@ -32,7 +32,7 @@ func DbInit() {
 	fmt.Println("Connected to Database")
 
 	// Uncomment if you have models to migrate
-	// err = db.AutoMigrate(&models.User{}, &models.BookSummary{}, &models.Cart{}, &models.Books{})
+	// err = db.AutoMigrate(&models.User{}, &models.BookSummary{},&models.Cart{},&models.Books{})
 	// if err != nil {
 	// 	log.Fatalf("Migration failed: %v", err)
 	// }

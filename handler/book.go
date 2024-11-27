@@ -31,7 +31,15 @@ func (bookHandler *BookHandler) Insert(c echo.Context) error {
 
 func (bookHandler *BookHandler) GellAllBook(c echo.Context) error {
 	userID := c.Get("id").(int64)
-	data, err := bookHandler.BookService.GellAllBook(userID)
+	author := c.QueryParam("writter_name")
+	title := c.QueryParam("title")
+	param := models.SearchByInputParam{
+		WritterName: author,
+		Title:       title,
+		UserID:      userID,
+	}
+
+	data, err := bookHandler.BookService.GellAllBook(param)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, models.BasicResp{Message: err.Error()})
 	}

@@ -3,6 +3,7 @@ package service
 import (
 	"core/domain"
 	"core/models"
+	"fmt"
 )
 
 type BookService struct {
@@ -22,8 +23,9 @@ func (b *BookService) Insert(param models.BookReqs) error {
 	return nil
 }
 
-func (b *BookService) GellAllBook(userID int64) ([]models.BooksResp, error) {
-	data, err := b.BookDomain.GetAll(userID)
+func (b *BookService) GellAllBook(param models.SearchByInputParam) ([]models.BooksResp, error) {
+	fmt.Println(param.WritterName)
+	data, err := b.BookDomain.GetAll(param)
 	if err != nil {
 		return []models.BooksResp{}, err
 	}

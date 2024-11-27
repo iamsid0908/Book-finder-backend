@@ -11,10 +11,6 @@ type AppModel struct {
 	User        handler.UserHandler
 	Auth        handler.AuthHandler
 	Role        handler.RoleHandler
-	Customer    handler.CustomerHandler
-	Billing     handler.BillingHandler
-	Payment     handler.PaymentHandler
-	Email       handler.EmailHandler
 	Book        handler.BookHandler
 	BookSummary handler.BookSummaryHandler
 	Cart        handler.CartHandler
@@ -26,10 +22,6 @@ func App() AppModel {
 	authDomain := &domain.AuthDomainCtx{}
 	userDomain := &domain.UserDomainCtx{}
 	roleDomain := &domain.RoleDomainCtx{}
-	customerDomain := &domain.CustomerDomainCtx{}
-	billingDomain := &domain.BillingDomainCtx{}
-	paymentDomain := &domain.PaymentDomainCtx{}
-	emailDomain := &domain.EmailDomainCtx{}
 	bookDomain := &domain.BookDomainCtx{}
 	bookSummaryDomain := &domain.BookSummaryDomainCtx{}
 	cartDomain := &domain.CartDomainCtx{}
@@ -47,18 +39,6 @@ func App() AppModel {
 	}
 	roleService := service.RoleService{
 		RoleDomain: roleDomain,
-	}
-	customerService := service.CustomerService{
-		CustomerDomain: customerDomain,
-	}
-	billingService := service.BillingService{
-		BillingDomain: billingDomain,
-	}
-	paymentService := service.PaymentService{
-		PaymentDomain: paymentDomain,
-	}
-	emailService := service.EmailService{
-		EmailDomain: emailDomain,
 	}
 	bookService := service.BookService{
 		BookDomain: bookDomain,
@@ -83,18 +63,6 @@ func App() AppModel {
 	roleHandler := handler.RoleHandler{
 		RoleService: roleService,
 	}
-	customerHandler := handler.CustomerHandler{
-		CustomerService: customerService,
-	}
-	billingHandler := handler.BillingHandler{
-		BillingService: billingService,
-	}
-	paymentHandler := handler.PaymentHandler{
-		PaymentService: paymentService,
-	}
-	emailHandler := handler.EmailHandler{
-		EmailService: emailService,
-	}
 	bookHandler := handler.BookHandler{
 		BookService: bookService,
 	}
@@ -110,10 +78,6 @@ func App() AppModel {
 		User:        userHandler,
 		Auth:        authHandler,
 		Role:        roleHandler,
-		Customer:    customerHandler,
-		Billing:     billingHandler,
-		Payment:     paymentHandler,
-		Email:       emailHandler,
 		Book:        bookHandler,
 		BookSummary: bookSummaryHandler,
 		Cart:        cartHandler,

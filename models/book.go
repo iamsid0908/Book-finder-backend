@@ -38,3 +38,11 @@ type BookWithCart struct {
 	CreatedAt   time.Time `gorm:"column:created_at"`
 	UpdatedAt   time.Time `gorm:"column:updated_at"`
 }
+
+type SearchByInputParam struct {
+	WritterName string `query:"writter_name"`
+	Title       string `query:"title"`
+	UserID      int64  `json:"user_id"`
+	Limit       int    `json:"limit"`
+	Page        int    `json:"page"`
+}
