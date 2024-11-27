@@ -116,9 +116,10 @@ func (c *UserDomainCtx) Update(param models.User) error {
 func (c *UserDomainCtx) GetUserName(param models.User) (models.User, error) {
 	db := config.DbManager()
 	result := models.User{}
-	err := db.Find(&result).Error
+	err := db.Where("id = ?", param.ID).First(&result).Error
 	if err != nil {
 		return models.User{}, err
 	}
+
 	return result, nil
 }
