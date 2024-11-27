@@ -9,6 +9,7 @@ import (
 
 type Configuration struct {
 	Port                 string `env:"PORT"`
+	Dburl                string `env:"DB_URL"`
 	DbHost               string `env:"DB_HOST"`
 	DbPort               string `env:"DB_PORT"`
 	DbName               string `env:"DB_NAME"`
