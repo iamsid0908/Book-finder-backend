@@ -1,7 +1,6 @@
 package main
 
 import (
-	"core/config"
 	"core/route"
 
 	"github.com/labstack/echo"
@@ -11,7 +10,7 @@ import (
 func main() {
 	e := echo.New()
 	// Middleware
-	config.DbInit()
+	// config.DbInit()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e = route.InitHttp()
