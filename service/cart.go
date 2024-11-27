@@ -30,7 +30,7 @@ func (c *CartService) GetCartByUserId(userID int64) ([]models.CartResp, error) {
 		response[i] = models.CartResp{
 			BookID:      resp.BookID,
 			Title:       resp.Title,
-			Thumbnail:   resp.Title,
+			Thumbnail:   resp.Thumbnail,
 			WritterName: resp.WritterName,
 			Cart:        true,
 		}
