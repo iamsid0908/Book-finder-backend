@@ -9,3 +9,5 @@ Install the dependencies:
 `go mod tidy`
 
 
+[Insomnia_2024-11-28.json](https://github.com/user-attachments/files/17943641/Insomnia_2024-11-28.json)
+read about the API here
