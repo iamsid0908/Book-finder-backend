@@ -6,18 +6,34 @@ import (
 )
 
 type BookDomain interface {
-	Insert(param models.Books) error
+	Get() ([]models.Books, error)
+	Insert(param models.Books) (int64, error)
 	GetAll(param models.SearchByInputParam) ([]models.BookWithCart, error)
+	GetCategory(param models.RecommendReqs) (models.Books, error)
 }
 type BookDomainCtx struct{}
 
-func (c *BookDomainCtx) Insert(param models.Books) error {
+func (c *BookDomainCtx) Get() ([]models.Books, error) {
+	db := config.DbManager()
+	limit := 10
+	offset := 0
+	books := []models.Books{}
+	err := db.Limit(limit).Offset(offset).Order("created_at DESC").Find(&books).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+
+}
+func (c *BookDomainCtx) Insert(param models.Books) (int64, error) {
 	db := config.DbManager()
 	err := db.Create(&param).Error
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+
+	return param.ID, nil
 }
 
 func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWithCart, error) {
@@ -42,7 +58,7 @@ func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWi
 
 	err := db.Table("books").
 		Select(`
-		books.id, books.title, books.thumbnail, books.writter_name, books.created_at, books.updated_at,
+		books.id, books.title, books.thumbnail, books.description,books.writter_name, books.created_at, books.updated_at,
 		CASE WHEN cart.book_id IS NOT NULL THEN TRUE ELSE FALSE END AS cart
 	`).
 		Joins("LEFT JOIN cart ON books.id = cart.book_id AND cart.user_id = ?", param.UserID).
@@ -52,6 +68,16 @@ func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWi
 
 	if err != nil {
 		return []models.BookWithCart{}, err
+	}
+	return result, nil
+}
+
+func (c *BookDomainCtx) GetCategory(param models.RecommendReqs) (models.Books, error) {
+	db := config.DbManager()
+	result := models.Books{}
+	err := db.Where("id = ?", param.BookID).First(&result).Error
+	if err != nil {
+		return models.Books{}, err
 	}
 	return result, nil
 }

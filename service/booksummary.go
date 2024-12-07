@@ -40,6 +40,7 @@ func (c *BookSummaryService) GetBookDetails(param models.GetBookSummaryDetailsRe
 		PublishedDate: data.PublishedDate,
 		Title:         data.Title,
 		WritterName:   data.WritterName,
+		Category:      data.Category,
 	}
 	return response, nil
 }

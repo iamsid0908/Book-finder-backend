@@ -19,6 +19,8 @@ func v1Routes(g *echo.Group, h AppModel) {
 	book := g.Group("/books", middleware.JWTVerify())
 	book.POST("/insert", h.Book.Insert)
 	book.GET("/getall", h.Book.GellAllBook)
+	book.POST("/bulk-insert", h.Book.BulkInsert)
+	book.POST("/recommendation/books", h.Book.Recommend)
 
 	booksummary := g.Group("/book-summary", middleware.JWTVerify())
 	booksummary.POST("/insert", h.BookSummary.Insert)

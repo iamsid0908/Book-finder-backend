@@ -1,3 +1,4 @@
 .env
 config/*.json
 /tmp/*
+database.go

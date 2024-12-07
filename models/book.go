@@ -1,12 +1,17 @@
 package models
 
-import "time"
+import (
+	"mime/multipart"
+	"time"
+)
 
 type Books struct {
 	ID          int64     `gorm:"column:id;"`
 	Title       string    `gorm:"title"`
 	Thumbnail   string    `gorm:"thumbnail"`
 	WritterName string    `gorm:"writter_name"`
+	Description string    `gorm:"description"`
+	Category    string    `gorm:"category"`
 	CreatedAt   time.Time `gorm:"created_at"`
 	UpdatedAt   time.Time `gorm:"updated_at"`
 }
@@ -24,19 +29,22 @@ type BooksResp struct {
 	Title       string    `json:"title"`
 	Thumbnail   string    `json:"thumbnail"`
 	WritterName string    `json:"writter_name"`
+	Description string    `json:"description"`
 	Cart        bool      `json:"cart"`
+	Relevance   float64   `json:"relevance"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type BookWithCart struct {
-	ID          int64     `gorm:"column:id"`
-	Title       string    `gorm:"column:title"`
-	Thumbnail   string    `gorm:"column:thumbnail"`
-	WritterName string    `gorm:"column:writter_name"`
-	Cart        bool      `gorm:"column:cart"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	ID          int64     `json:"id"`
+	Title       string    `json:"title"`
+	Thumbnail   string    `json:"thumbnail"`
+	Description string    `json:"description"`
+	WritterName string    `json:"writter_name"`
+	Cart        bool      `json:"cart"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type SearchByInputParam struct {
@@ -45,4 +53,23 @@ type SearchByInputParam struct {
 	UserID      int64  `json:"user_id"`
 	Limit       int    `json:"limit"`
 	Page        int    `json:"page"`
+}
+
+type BulkInsertBook struct {
+	Title         string    `json:"title"`
+	Author        string    `json:"author"`
+	Description   string    `json:"description"`
+	Category      string    `json:"category"`
+	PublishedDate time.Time `json:"published_date"`
+	Thumbnail     string    `json:"thumbnail"`
+	AuthorDetails string    `gorm:"author_details"`
+	Summary       string    `gorm:"summary"`
+}
+
+type BulkInsertBookReqs struct {
+	File *multipart.FileHeader
+}
+
+type RecommendReqs struct {
+	BookID int64 `json:"book_id"`
 }

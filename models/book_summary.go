@@ -5,7 +5,7 @@ import "time"
 type BookSummary struct {
 	ID            int64     `gorm:"column:id;primaryKey"`
 	BookID        int64     `gorm:"column:book_id;unique"`
-	Thumbnail     string    `gorm:"thumbnil"`
+	Thumbnail     string    `gorm:"thumbnail"`
 	AuthorDetails string    `gorm:"author_details"`
 	Summary       string    `gorm:"summary"`
 	PublishedDate time.Time `gorm:"published_date"`
@@ -32,6 +32,7 @@ type GetBookSummaryDetailsResp struct {
 	PublishedDate time.Time `json:"published_date"`
 	Title         string    `json:"title"`
 	WritterName   string    `json:"writter_name"`
+	Category      string    `json:"category"`
 }
 
 type GetBookSummaryDetailsResponse struct {
@@ -42,4 +43,5 @@ type GetBookSummaryDetailsResponse struct {
 	PublishedDate time.Time `json:"published_date"`
 	Title         string    `json:"title"`
 	WritterName   string    `json:"writter_name"`
+	Category      string    `json:"category"`
 }

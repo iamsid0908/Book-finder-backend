@@ -24,7 +24,7 @@ func (c *BookSummaryDomainCtx) GetBookDetails(param models.BookSummary) (models.
 	db := config.DbManager()
 	result := models.GetBookSummaryDetailsResp{}
 	err := db.Table("books").
-		Select("books.id, books.title, books.thumbnail, books.writter_name, book_summary.summary, book_summary.author_details, book_summary.published_date").
+		Select("books.id, books.title, books.thumbnail, books.writter_name,books.category, book_summary.summary, book_summary.author_details, book_summary.published_date").
 		Joins("inner join book_summary on books.id = book_summary.book_id").
 		Where("books.id = ?", param.BookID).
 		First(&result).Error
@@ -33,5 +33,4 @@ func (c *BookSummaryDomainCtx) GetBookDetails(param models.BookSummary) (models.
 		return models.GetBookSummaryDetailsResp{}, err
 	}
 	return result, nil
-
 }

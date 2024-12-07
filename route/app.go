@@ -41,7 +41,8 @@ func App() AppModel {
 		RoleDomain: roleDomain,
 	}
 	bookService := service.BookService{
-		BookDomain: bookDomain,
+		BookDomain:        bookDomain,
+		BookSummaryDomain: bookSummaryDomain,
 	}
 	bookSummaryService := service.BookSummaryService{
 		BookSummaryDomain: bookSummaryDomain,
