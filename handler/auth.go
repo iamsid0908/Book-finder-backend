@@ -59,7 +59,7 @@ func (authHandler *AuthHandler) LoginUser(c echo.Context) error {
 		Secure:   true,
 		Path:     "/",
 		MaxAge:   86400,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 	}
 	c.SetCookie(cookie)
 	resp := models.BasicResp{
@@ -97,7 +97,7 @@ func (authHandler *AuthHandler) GoogleLogin(c echo.Context) error {
 		Secure:   true,
 		Path:     "/",
 		MaxAge:   86400,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteNoneMode,
 	}
 	c.SetCookie(cookie)
 	resp := models.BasicResp{
