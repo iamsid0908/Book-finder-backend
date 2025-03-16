@@ -16,6 +16,7 @@ type UserDomain interface {
 	GetAll() ([]models.User, error)
 	Update(param models.User) error
 	GetUserName(param models.User) (models.User, error)
+	Create(param models.User) (models.User, error)
 }
 type UserDomainCtx struct{}
 
@@ -49,7 +50,7 @@ func (c *UserDomainCtx) Get(param models.GetUserParam) (models.User, error) {
 	err := db.First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return user, nil
+			return models.User{}, errors.New("user not found")
 		}
 		return user, err
 	}
@@ -63,6 +64,14 @@ func (c *UserDomainCtx) Insert(param models.User) error {
 		return err
 	}
 	return nil
+}
+func (c *UserDomainCtx) Create(param models.User) (models.User, error) {
+	db := config.DbManager()
+	err := db.Create(&param).Error
+	if err != nil {
+		return models.User{}, err
+	}
+	return param, nil
 }
 
 func (c *UserDomainCtx) GetLoginUser(param *models.User) (*models.User, error) {

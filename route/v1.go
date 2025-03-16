@@ -12,9 +12,11 @@ func v1Routes(g *echo.Group, h AppModel) {
 	auth.POST("/register", h.Auth.RegisterUser)
 	auth.POST("/login", h.Auth.LoginUser)
 	auth.GET("/test", h.Auth.Test, middleware.JWTVerify())
+	auth.POST("/google-login", h.Auth.GoogleLogin, middleware.VerifyGoogleToken())
+	auth.GET("/logout", h.Auth.UserLogOut, middleware.JWTVerify())
 
 	user := g.Group("/user", middleware.JWTVerify())
-	user.GET("/get-user-name", h.User.GetUserName)
+	user.GET("/get-user", h.User.GetUserName)
 
 	book := g.Group("/books", middleware.JWTVerify())
 	book.POST("/insert", h.Book.Insert)

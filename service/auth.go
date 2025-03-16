@@ -7,7 +7,6 @@ import (
 	"core/utils"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -21,10 +20,10 @@ type AuthService struct {
 }
 
 func (c *AuthService) RegisterUser(param *models.RegisterUserRequest) error {
-	err := c.validateRegisterUser(param)
-	if err != nil {
-		return err
-	}
+	// err := c.validateRegisterUser(param)
+	// if err != nil {
+	// 	return err
+	// }
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(param.Password), 10)
 	if err != nil {
 		return err
@@ -102,6 +101,38 @@ func (c *AuthService) validateLogIn(param models.LogInRequest, user models.UserD
 	return nil
 }
 
+func (c *AuthService) LoginGoogleUser(param models.GoogleUserRequest) (models.LogInResponse, error) {
+	user, err := c.UserDomain.Get(models.GetUserParam{Email: param.Email})
+	if err != nil {
+		user, err = c.UserDomain.Create(models.User{Email: param.Email, Name: param.Name})
+		if err != nil {
+			return models.LogInResponse{}, err
+		}
+	}
+	now := time.Now()
+	userData := models.UserData{
+		ID:       user.ID,
+		Email:    user.Email,
+		Name:     user.Name,
+		Language: user.Language,
+	}
+	payload := ParseJWTParamFromUser(userData, now)
+
+	token, err := GenerateJWT(payload)
+	if err != nil {
+		return models.LogInResponse{}, err
+	}
+	resp := models.LogInResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		Name:      user.Name,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+		Token:     token,
+	}
+	return resp, nil
+}
+
 func ParseJWTParamFromUser(user models.UserData, now time.Time) models.JWTPayload {
 	payload := models.JWTPayload{
 		ID:       user.ID,
@@ -130,23 +161,16 @@ func GenerateJWT(claims models.JWTPayload) (string, error) {
 }
 
 func ExtractJWT(e echo.Context) (*models.JWTPayload, error) {
-	req := e.Request()
-	header := req.Header
-	auth := header.Get("Authorization")
-
-	if len(auth) <= 0 {
+	cookie, err := e.Cookie("accessToken")
+	if err != nil {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, utils.EmptyAuth)
 	}
 
-	splitToken := strings.Split(auth, " ")
-	if len(splitToken) < 2 {
+	tokenStr := cookie.Value
+	if tokenStr == "" {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, utils.EmptyAuth)
 	}
 
-	if splitToken[0] != "Bearer" {
-		return nil, echo.NewHTTPError(http.StatusUnauthorized, utils.EmptyAuth)
-	}
-	tokenStr := splitToken[1]
 	token, err := jwt.ParseWithClaims(tokenStr, &models.JWTPayload{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf(utils.UnexpectedSigning, token.Header["alg"])
@@ -164,7 +188,7 @@ func ExtractJWT(e echo.Context) (*models.JWTPayload, error) {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
 			errorStr = fmt.Sprintf("Invalid token format: %s", tokenStr)
 		} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
-			errorStr = "Token has been expired"
+			errorStr = "Token has expired"
 		} else {
 			errorStr = fmt.Sprintf("Token Parsing Error: %s", err.Error())
 		}
@@ -172,5 +196,4 @@ func ExtractJWT(e echo.Context) (*models.JWTPayload, error) {
 	} else {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "Unknown token error")
 	}
-
 }

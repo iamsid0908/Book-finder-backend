@@ -8,7 +8,7 @@ import (
 type BookDomain interface {
 	Get() ([]models.Books, error)
 	Insert(param models.Books) (int64, error)
-	GetAll(param models.SearchByInputParam) ([]models.BookWithCart, error)
+	GetAll(param models.SearchByInputParam) ([]models.BookWithCart, int64, error)
 	GetCategory(param models.RecommendReqs) (models.Books, error)
 }
 type BookDomainCtx struct{}
@@ -36,19 +36,35 @@ func (c *BookDomainCtx) Insert(param models.Books) (int64, error) {
 	return param.ID, nil
 }
 
-func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWithCart, error) {
+func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWithCart, int64, error) {
 	db := config.DbManager()
 	result := []models.BookWithCart{}
+	var totalCount int64
 
+	query := db.Table("books").
+		Select(`
+		books.id, books.title, books.thumbnail, books.description, books.writter_name, books.created_at, books.updated_at,
+		CASE WHEN cart.book_id IS NOT NULL THEN TRUE ELSE FALSE END AS cart
+	`).
+		Joins("LEFT JOIN cart ON books.id = cart.book_id AND cart.user_id = ?", param.UserID)
+
+	// Apply filters
 	if param.WritterName != "" && param.Title != "" {
-		db = db.Where("writter_name ILIKE ? OR title ILIKE ?", "%"+param.WritterName+"%", "%"+param.Title+"%")
+		query = query.Where("writter_name ILIKE ? OR title ILIKE ?", "%"+param.WritterName+"%", "%"+param.Title+"%")
 	} else if param.WritterName != "" {
-		db = db.Where("writter_name ILIKE ?", "%"+param.WritterName+"%")
+		query = query.Where("writter_name ILIKE ?", "%"+param.WritterName+"%")
 	} else if param.Title != "" {
-		db = db.Where("title ILIKE ?", "%"+param.Title+"%")
+		query = query.Where("title ILIKE ?", "%"+param.Title+"%")
 	}
-	limit := 10
-	offset := 0
+
+	// Get total count (without LIMIT & OFFSET)
+	if err := query.Count(&totalCount).Error; err != nil {
+		return []models.BookWithCart{}, 0, err
+	}
+
+	// Apply pagination
+	limit := int64(8)
+	offset := int64(0)
 	if param.Limit > 0 {
 		limit = param.Limit
 	}
@@ -56,20 +72,12 @@ func (c *BookDomainCtx) GetAll(param models.SearchByInputParam) ([]models.BookWi
 		offset = (param.Page - 1) * limit
 	}
 
-	err := db.Table("books").
-		Select(`
-		books.id, books.title, books.thumbnail, books.description,books.writter_name, books.created_at, books.updated_at,
-		CASE WHEN cart.book_id IS NOT NULL THEN TRUE ELSE FALSE END AS cart
-	`).
-		Joins("LEFT JOIN cart ON books.id = cart.book_id AND cart.user_id = ?", param.UserID).
-		Limit(limit).
-		Offset(offset).
-		Scan(&result).Error
-
+	err := query.Limit(int(limit)).Offset(int(offset)).Scan(&result).Error
 	if err != nil {
-		return []models.BookWithCart{}, err
+		return []models.BookWithCart{}, 0, err
 	}
-	return result, nil
+
+	return result, totalCount, nil
 }
 
 func (c *BookDomainCtx) GetCategory(param models.RecommendReqs) (models.Books, error) {

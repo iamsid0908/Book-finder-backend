@@ -35,3 +35,8 @@ type JWTPayload struct {
 	Language string `json:"language"`
 	jwt.StandardClaims
 }
+
+type GoogleUserRequest struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}

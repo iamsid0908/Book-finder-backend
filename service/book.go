@@ -5,6 +5,7 @@ import (
 	"core/models"
 	"fmt"
 	"log"
+	"math"
 	"sort"
 	"strings"
 	"time"
@@ -30,11 +31,17 @@ func (b *BookService) Insert(param models.BookReqs) error {
 	return nil
 }
 
-func (b *BookService) GellAllBook(param models.SearchByInputParam) ([]models.BooksResp, error) {
-	fmt.Println(param.WritterName)
-	data, err := b.BookDomain.GetAll(param)
+func (b *BookService) GellAllBook(param models.SearchByInputParam) (models.BookRespData, error) {
+	data, count, err := b.BookDomain.GetAll(param)
 	if err != nil {
-		return []models.BooksResp{}, err
+		return models.BookRespData{}, err
+	}
+
+	meta := models.MetaPagination{
+		PageNumber:   param.Page,
+		PageSize:     int64(len(data)),
+		TotalPages:   int64(math.Ceil(float64(count) / float64(param.Limit))),
+		TotalRecords: count,
 	}
 
 	resposnse := make([]models.BooksResp, len(data))
@@ -50,8 +57,11 @@ func (b *BookService) GellAllBook(param models.SearchByInputParam) ([]models.Boo
 			UpdatedAt:   resp.UpdatedAt,
 		}
 	}
-	return resposnse, nil
-
+	resp := models.BookRespData{
+		Data: resposnse,
+		Meta: meta,
+	}
+	return resp, nil
 }
 
 func (b *BookService) BulkInsert(param models.BulkInsertBookReqs) error {

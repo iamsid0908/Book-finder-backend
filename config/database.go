@@ -14,8 +14,9 @@ var db *gorm.DB
 var err error
 
 func DbInit() {
-	config := GetConfig()
-	connectString := fmt.Sprintf(config.Dburl)
+	// config := GetConfig()
+	connectString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		"localhost", "postgres", "822111", "book", "5432")
 
 	// Open the connection to the database
 	db, err = gorm.Open(postgres.Open(connectString), &gorm.Config{
@@ -32,7 +33,7 @@ func DbInit() {
 	fmt.Println("Connected to Database")
 
 	// Uncomment if you have models to migrate
-	// err = db.AutoMigrate(&models.User{}, &models.BookSummary{},&models.Cart{},&models.Books{})
+	// err = db.AutoMigrate(&models.User{}, &models.BookSummary{}, &models.Cart{}, &models.Books{})
 	// if err != nil {
 	// 	log.Fatalf("Migration failed: %v", err)
 	// }

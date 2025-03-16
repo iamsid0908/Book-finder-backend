@@ -43,6 +43,9 @@ type BookWithCart struct {
 	Description string    `json:"description"`
 	WritterName string    `json:"writter_name"`
 	Cart        bool      `json:"cart"`
+	Limit       int64     `json:"limit"`
+	Page        int64     `json:"page"`
+	TotalPage   int64     `json:"total_page"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -51,8 +54,8 @@ type SearchByInputParam struct {
 	WritterName string `query:"writter_name"`
 	Title       string `query:"title"`
 	UserID      int64  `json:"user_id"`
-	Limit       int    `json:"limit"`
-	Page        int    `json:"page"`
+	Limit       int64  `json:"limit"`
+	Page        int64  `json:"page"`
 }
 
 type BulkInsertBook struct {
@@ -72,4 +75,8 @@ type BulkInsertBookReqs struct {
 
 type RecommendReqs struct {
 	BookID int64 `json:"book_id"`
+}
+type BookRespData struct {
+	Data []BooksResp
+	Meta MetaPagination
 }

@@ -61,13 +61,13 @@ func (c *UserService) Update(param models.UpdateUserParam) error {
 	return nil
 }
 
-func (c *UserService) GetUserName(userID int64) (string, error) {
+func (c *UserService) GetUserName(userID int64) (models.User, error) {
 	useParam := models.User{
 		ID: userID,
 	}
 	data, err := c.UserDomain.GetUserName(useParam)
 	if err != nil {
-		return "", err
+		return models.User{}, err
 	}
-	return data.Name, nil
+	return data, nil
 }

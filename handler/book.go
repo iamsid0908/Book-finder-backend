@@ -5,6 +5,7 @@ import (
 	"core/service"
 	"core/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -33,18 +34,27 @@ func (bookHandler *BookHandler) GellAllBook(c echo.Context) error {
 	userID := c.Get("id").(int64)
 	author := c.QueryParam("writter_name")
 	title := c.QueryParam("title")
+	page := c.QueryParam("page")
+	pageInt, err := strconv.ParseInt(page, 10, 64)
+	if err != nil {
+		pageInt = 1
+	}
+
 	param := models.SearchByInputParam{
 		WritterName: author,
 		Title:       title,
 		UserID:      userID,
+		Page:        (pageInt),
+		Limit:       int64(8),
 	}
 	data, err := bookHandler.BookService.GellAllBook(param)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, models.BasicResp{Message: err.Error()})
 	}
-	resp := models.BasicResp{
+	resp := models.BasicRespWithMeta{
 		Message: utils.Success,
-		Data:    data,
+		Data:    data.Data,
+		Meta:    data.Meta,
 	}
 	return c.JSON(http.StatusOK, resp)
 }
