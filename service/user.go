@@ -16,13 +16,11 @@ func (c *UserService) List() ([]models.ListOfUser, error) {
 	}
 	response := make([]models.ListOfUser, len(data))
 	for i, resp := range data {
-		roles := FindRole(resp.RoleId)
 		response[i] = models.ListOfUser{
 			ID:        resp.ID,
 			Email:     resp.Email,
 			Name:      resp.Name,
-			RoleId:    resp.RoleId,
-			Role:      roles,
+			Role:      resp.Role,
 			Language:  resp.Language,
 			CreatedAt: resp.CreatedAt,
 			UpdatedAt: resp.UpdatedAt,
@@ -50,7 +48,7 @@ func (c *UserService) Update(param models.UpdateUserParam) error {
 		ID:       param.UserID,
 		Email:    param.Email,
 		Name:     param.Name,
-		RoleId:   param.RoleId,
+		Role:     param.Role,
 		Language: param.Language,
 	}
 
@@ -61,13 +59,20 @@ func (c *UserService) Update(param models.UpdateUserParam) error {
 	return nil
 }
 
-func (c *UserService) GetUserName(userID int64) (models.User, error) {
+func (c *UserService) GetUserName(userID int64) (models.UserDataResponse, error) {
 	useParam := models.User{
 		ID: userID,
 	}
 	data, err := c.UserDomain.GetUserName(useParam)
 	if err != nil {
-		return models.User{}, err
+		return models.UserDataResponse{}, err
 	}
-	return data, nil
+	resp := models.UserDataResponse{
+		ID:       data.ID,
+		Email:    data.Email,
+		Name:     data.Name,
+		Role:     data.Role,
+		Language: data.Language,
+	}
+	return resp, nil
 }

@@ -7,8 +7,11 @@ type User struct {
 	Email     string    `gorm:"column:email;unique"`
 	Password  *string   `gorm:"column:password"`
 	Name      string    `gorm:"column:name"`
-	RoleId    int16     `gorm:"column:role_id"`
+	Role      string    `gorm:"column:role"`
 	Language  string    `gorm:"column:language"`
+	IsActive  bool      `gorm:"column:is_active;default:false"`
+	Otp       string    `gorm:"column:otp"`
+	OtpExpiry time.Time `gorm:"column:otp_expiry"`
 	CreatedAt time.Time `gorm:"column:created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
@@ -27,7 +30,6 @@ type UserData struct {
 	Email     string    `json:"email"`
 	Name      string    `json:"name"`
 	Password  *string   `json:"password"`
-	RoleId    int16     `json:"role"`
 	Role      string    `json:"roles"`
 	Language  string    `json:"language"`
 	CreatedAt time.Time `json:"created_at"`
@@ -39,7 +41,6 @@ type ListOfUser struct {
 	Email     string    `json:"email"`
 	Name      string    `json:"name"`
 	Password  *string   `json:"password"`
-	RoleId    int16     `json:"role"`
 	Role      string    `json:"roles"`
 	Language  string    `json:"language"`
 	CreatedAt time.Time `json:"created_at"`
@@ -49,6 +50,16 @@ type UpdateUserParam struct {
 	UserID   int64  `json:"user_id"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
-	RoleId   int16  `json:"role_id"`
+	Role     string `json:"role"`
 	Language string `json:"language"`
+}
+
+type UserDataResponse struct {
+	ID        int64     `json:"id"`
+	Email     string    `json:"email"`
+	Name      string    `json:"name"`
+	Role      string    `json:"roles"`
+	Language  string    `json:"language"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

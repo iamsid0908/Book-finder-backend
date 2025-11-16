@@ -18,6 +18,7 @@ type Configuration struct {
 	JWTSecret            string `env:"JWT_SECRET"`
 	PrimaryEmail         string `env:"PRIMARY_EMAIL"`
 	PrimaryEmailPassword string `env:"PRIMARY_EMAIL_PASSWORD"`
+	FrontendUrl          string `env:"FRONTEND_URL"`
 }
 
 func GetConfig() Configuration {
