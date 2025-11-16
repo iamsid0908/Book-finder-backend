@@ -11,7 +11,7 @@ func InitHttp() *echo.Echo {
 	app := App()
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"https://book-finder0908sid.netlify.app", "http://localhost:5173"}, // Add your frontend URLs
+		AllowOrigins:     []string{"https://book-finder0908sid.netlify.app", "http://localhost:3000"}, // Add your frontend URLs
 		AllowMethods:     []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowCredentials: true,

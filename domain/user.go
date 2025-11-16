@@ -11,20 +11,20 @@ import (
 type UserDomain interface {
 	GetWithRole(param models.GetUserParam) (models.UserData, error)
 	Get(param models.GetUserParam) (models.User, error)
-	Insert(param models.User) error
+	Insert(param models.User) (models.User, error)
 	GetLoginUser(params *models.User) (*models.User, error)
 	GetAll() ([]models.User, error)
 	Update(param models.User) error
 	GetUserName(param models.User) (models.User, error)
 	Create(param models.User) (models.User, error)
+	GetUserByEmail(param models.User) (models.User, error)
 }
 type UserDomainCtx struct{}
 
 func (c *UserDomainCtx) GetWithRole(param models.GetUserParam) (models.UserData, error) {
 	db := config.DbManager()
 	var user models.UserData
-	db = db.Table("users").Select("users.id, users.email, users.name, users.password,users.role_id, role.role as role, users.language, users.created_at, users.updated_at").
-		Joins("left join role on users.role_id = role.id")
+	db = db.Table("users")
 	if param.ID != 0 {
 		db = db.Where("users.id = ?", param.ID)
 	}
@@ -57,13 +57,13 @@ func (c *UserDomainCtx) Get(param models.GetUserParam) (models.User, error) {
 	return user, nil
 }
 
-func (c *UserDomainCtx) Insert(param models.User) error {
+func (c *UserDomainCtx) Insert(param models.User) (models.User, error) {
 	db := config.DbManager()
 	err := db.Create(&param).Error
 	if err != nil {
-		return err
+		return models.User{}, err
 	}
-	return nil
+	return param, nil
 }
 func (c *UserDomainCtx) Create(param models.User) (models.User, error) {
 	db := config.DbManager()
@@ -102,30 +102,43 @@ func (c *UserDomainCtx) Update(param models.User) error {
 	db := config.DbManager().Model(&models.User{})
 	userID := param.ID
 	update := map[string]interface{}{}
-	if param.Email != "" {
-		update["email"] = param.Email
+	if param.Otp != "" {
+		update["otp"] = param.Otp
+	}
+	if !param.OtpExpiry.IsZero() {
+		update["otp_expiry"] = param.OtpExpiry
 	}
 	if param.Name != "" {
 		update["name"] = param.Name
 	}
-	if param.RoleId != 0 {
-		update["role_id"] = param.RoleId
+	if param.Role != "" {
+		update["role"] = param.Role
 	}
 	if param.Language != "" {
 		update["language"] = param.Language
 	}
-
-	err := db.Where("id = ?", userID).Updates(update).Error
-	if err != nil {
-		return err
+	if param.IsActive {
+		update["is_active"] = param.IsActive
 	}
-	return nil
+
+	return db.Where("id = ?", userID).Updates(update).Error
 }
 
 func (c *UserDomainCtx) GetUserName(param models.User) (models.User, error) {
 	db := config.DbManager()
 	result := models.User{}
 	err := db.Where("id = ?", param.ID).First(&result).Error
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return result, nil
+}
+
+func (c *UserDomainCtx) GetUserByEmail(param models.User) (models.User, error) {
+	db := config.DbManager()
+	result := models.User{}
+	err := db.Where("email = ?", param.Email).First(&result).Error
 	if err != nil {
 		return models.User{}, err
 	}

@@ -1,0 +1,4 @@
+{"level":"ERROR","timestamp":"2025-09-08T21:39:17.737995556+05:30","caller":"/home/siddharth/Desktop/book-finder-BE/Book-finder-backend/service/auth.go:164","message":"user is not active, please verify your email","additionalInfo":null}
+{"level":"ERROR","timestamp":"2025-09-08T21:39:20.501902995+05:30","caller":"/home/siddharth/Desktop/book-finder-BE/Book-finder-backend/service/auth.go:164","message":"user is not active, please verify your email","additionalInfo":null}
+{"level":"ERROR","timestamp":"2025-09-08T21:40:09.187626334+05:30","caller":"/home/siddharth/Desktop/book-finder-BE/Book-finder-backend/service/auth.go:165","message":"user is not active, please verify your email","additionalInfo":null}
+{"level":"ERROR","timestamp":"2025-09-08T21:41:32.321205118+05:30","caller":"/home/siddharth/Desktop/book-finder-BE/Book-finder-backend/service/auth.go:165","message":"user is not active, please verify your email","additionalInfo":null}

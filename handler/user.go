@@ -4,6 +4,7 @@ import (
 	"core/models"
 	"core/service"
 	"core/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -43,6 +44,7 @@ func (userHandler *UserHandler) Update(c echo.Context) error {
 
 func (userHandler *UserHandler) GetUserName(c echo.Context) error {
 	userId := c.Get("id").(int64)
+	fmt.Println(userId)
 	data, err := userHandler.UserService.GetUserName(userId)
 	if err != nil {
 		return err

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Our Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 25px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #08C1BB;
+    }
+    .otp {
+      font-size: 20px;
+      font-weight: bold;
+      background: #f4f4f4;
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px;
+      margin: 15px 0;
+      letter-spacing: 2px;
+    }
+    p {
+      line-height: 1.6;
+    }
+    .footer {
+      font-size: 12px;
+      color: #777;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Hi {{.UserName}},</h2>
+    <p>Welcome to our platform! Please use the OTP below to verify your email address:</p>
+    
+    <div class="otp">{{.OTP}}</div>
+    
+    <p>This OTP will expire in 10 minutes. Do not share it with anyone.</p>
+    <p>Thanks,<br>The Team</p>
+    
+    <div class="footer">
+      © {{.Year}} Our Company. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

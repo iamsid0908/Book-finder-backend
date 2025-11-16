@@ -10,9 +10,9 @@ func v1Routes(g *echo.Group, h AppModel) {
 	g.GET("/health", h.Health.Check)
 	auth := g.Group("/auth")
 	auth.POST("/register", h.Auth.RegisterUser)
+	auth.POST("/resend-otp", h.Auth.ResendOTP)
+	auth.POST("/verify-otp", h.Auth.VerifyOTP)
 	auth.POST("/login", h.Auth.LoginUser)
-	auth.GET("/test", h.Auth.Test, middleware.JWTVerify())
-	auth.POST("/google-login", h.Auth.GoogleLogin, middleware.VerifyGoogleToken())
 	auth.GET("/logout", h.Auth.UserLogOut, middleware.JWTVerify())
 
 	user := g.Group("/user", middleware.JWTVerify())
@@ -33,5 +33,17 @@ func v1Routes(g *echo.Group, h AppModel) {
 	cart.GET("/get-cart", h.Cart.GetCartByUserId)
 	cart.GET("/cart-size", h.Cart.GetSizeofCart)
 	cart.DELETE("/cart-remove", h.Cart.RemoveFromCart)
+
+	workspace := g.Group("/workspace", middleware.JWTVerify())
+	workspace.POST("/create", h.Workspace.CreateWorkspace)
+	workspace.POST("/get", h.Workspace.GetWorkspaceById)
+	workspace.POST("/add_user", h.Workspace.AddUserInWorkspace)
+	workspace.POST("/getall_workspace", h.Workspace.GetAllWorkspace)
+
+	g.POST("/workspace/accept-invite", h.Workspace.AcceptInvite)
+
+	channel := g.Group("/channel", middleware.JWTVerify())
+	channel.POST("/create", h.Channel.CreateChannel)
+	channel.POST("/add-user", h.Channel.AddUserInChannel)
 
 }

@@ -16,8 +16,30 @@ func RegisterUser(param *models.RegisterUserRequest) error {
 	if param.Password == "" {
 		return utils.ErrEmptyPassword
 	}
-	if param.Role == 0 {
-		return utils.ErrEmptyRole
+
+	return nil
+}
+
+func ResendOTP(param *models.ResendOTPRequest) error {
+	if param.Email == "" {
+		return utils.ErrEmptyEmail
+	}
+	if param.Id == 0 {
+		return utils.ErrEmptyUserID
+	}
+
+	return nil
+}
+
+func VerifyOTP(param *models.VerifyOTPRequest) error {
+	if param.Otp == "" {
+		return utils.ErrEmptyOTP
+	}
+	if param.Id == 0 {
+		return utils.ErrEmptyUserID
+	}
+	if param.Email == "" {
+		return utils.ErrEmptyEmail
 	}
 
 	return nil
